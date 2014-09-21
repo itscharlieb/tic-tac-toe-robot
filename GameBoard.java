@@ -25,4 +25,13 @@ public class GameBoard{
 			}
 		}
 	}
+	
+	public fieldValue getFieldValue(int i, int j){
+		return fieldValue[i][j];
+	}
+
+	public void setFieldValue(int i, int j, fieldValue fv){
+		fieldValue[i][j] = fv;
+	}
+
 }
