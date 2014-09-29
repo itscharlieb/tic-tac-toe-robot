@@ -34,4 +34,7 @@ public class GameBoard{
 		fieldValue[i][j] = fv;
 	}
 
+	public boolean IsTerminal() {
+		
+	}
 }
