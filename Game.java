@@ -1,26 +1,28 @@
-import java.util.LinkedList;
-
 
 public class Game {
-	
-	Game() {
-		
-	}
-	
+
 	public static void main (String args[]) {
 		Game game = new Game();
 		game.playGame();
 	}
 	
 	private void playGame() {
-		LinkedList<Player> players = new LinkedList<Player>();
-		players.add();
-		players.add();
-		
+
 		GameBoard board = new GameBoard();
+		Human player1 = new Human();
+		AI player2 = new AI();
 		
-		while (board) {
+		boolean isOddTurn = true;
+		
+		while (!board.isTerminal()) {
 			
+			if (isOddTurn) {
+				board.setFieldValue(player1.nextMove(), TileValue.Ex);
+			} else {
+				board.setFieldValue(player2.nextMove(), TileValue.Oh);
+			}
+			
+			isOddTurn = isOddTurn ? false : true;
 		}
 	}
 }
