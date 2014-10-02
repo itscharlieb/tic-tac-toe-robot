@@ -1,4 +1,6 @@
-
+/*
+ * Simply holds a row and column coordinate
+ */
 public class Position {
 	
 	public final int row;

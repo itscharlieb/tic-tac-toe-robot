@@ -1,4 +1,6 @@
-// represents a tile on the board
+/*
+ * Represents a board square and its state
+ */
 public class Tile {
 	
 	public final Position position;

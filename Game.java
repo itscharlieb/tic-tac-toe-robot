@@ -1,4 +1,6 @@
-
+/*
+ * The main thread that handles the interaction between players, the board, and the display.
+ */
 public class Game {
 
 	public static void main (String args[]) {
@@ -14,6 +16,7 @@ public class Game {
 		
 		boolean isOddTurn = true;
 		
+		// until the game is finished, keep playing turns
 		while (!board.isTerminal()) {
 			
 			if (isOddTurn) {
@@ -22,7 +25,7 @@ public class Game {
 				board.setFieldValue(player2.nextMove(), TileValue.Oh);
 			}
 			
-			isOddTurn = isOddTurn ? false : true;
+			isOddTurn = !isOddTurn;
 		}
 	}
 }
