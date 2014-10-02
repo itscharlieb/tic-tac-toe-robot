@@ -107,14 +107,11 @@ public class GameBoard {
 		
 		if (!isTerminal()) 
 		{
-			BoardDisplay display = new BoardDisplay();
 			for (Tile tile : getEmptyTiles()) 
 			{
 				GameBoard successor = new GameBoard(this, tile.position);
-				
 				successor.setCurrentPlayer(Game.getNextPlayer.get(currentPlayer));
 				successors.add(successor);
-				display.drawBoard(successor);
 			}
 		}
 		

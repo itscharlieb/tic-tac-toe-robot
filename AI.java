@@ -16,6 +16,7 @@ public class AI implements IPlayer {
 		EnumMap<Player, Double> pruneUtilities = makeMinimumValueMap();
 
 		for (GameBoard potentialState : board.getSuccessorStates()) {
+			
 			EnumMap<Player, Double> potentialStateUtilities = calculateEventualUtilities(potentialState, pruneUtilities);
 
 			if ((bestUtilities.get(board.getCurrentPlayer()) + FUDGE) < potentialStateUtilities.get(board.getCurrentPlayer())) {
@@ -26,9 +27,13 @@ public class AI implements IPlayer {
 			if (Math.abs(bestUtilities.get(board.getCurrentPlayer()) - potentialStateUtilities.get(board.getCurrentPlayer())) < FUDGE) {
 				bestMoves.add(potentialState);
 			}
+		
 		}
 		
-		return bestMoves.get(0);
+		GameBoard bestMove = bestMoves.get(0);
+		bestMove.setCurrentPlayer(Game.getNextPlayer.get(bestMove.getCurrentPlayer()));
+		
+		return bestMove;
 	}
 
 	private static EnumMap<Player, Double> calculateEventualUtilities(GameBoard board, EnumMap<Player, Double> parentPruneUtilities) {
