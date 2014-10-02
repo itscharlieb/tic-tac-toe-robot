@@ -5,6 +5,6 @@
 public interface IPlayer {
 	
 	//returns a Position corresponding to the current Players next move
-	Position nextMove(GameBoard board);
+	GameBoard nextMove(GameBoard board);
 
 }

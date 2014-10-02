@@ -26,5 +26,6 @@ public class BoardDisplay {
 			
 			System.out.println(row);
 		}
+		System.out.println();
 	}
 }

@@ -1,3 +1,4 @@
+import java.util.EnumMap;
 import java.util.LinkedList;
 
 /*
@@ -7,24 +8,58 @@ public class GameBoard {
 
 	//number of rows and columns for the board
 	private static final int BOARD_SIDE_LENGTH = 3;
-
+	//the player whose turn it is for this board
+	private Player currentPlayer;
 	//2D arraylist of FieldValues represents the game board
 	private Tile[][] board;
 
-	//constuctor creates the gameBoard
-	public GameBoard(){
+	//constuctor creates the inital gameBoard
+	public GameBoard(Player pInitialPlayer) {
+		currentPlayer = pInitialPlayer;
 		board = new Tile[BOARD_SIDE_LENGTH][BOARD_SIDE_LENGTH];
-		initializeBoard();
-	}
-
-	//initializes all board fields to Undeclared
-	private void initializeBoard() {
+		
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board.length; j++) {
 				Tile tile = new Tile(new Position(i,j), TileValue.Undeclared);
 				board[i][j] = tile;
 			}
 		}
+	}
+	
+	//clones a game board with a new move
+	public GameBoard(GameBoard pBoard, Position pPosition) {
+		currentPlayer = pBoard.getCurrentPlayer();
+		board = new Tile[BOARD_SIDE_LENGTH][BOARD_SIDE_LENGTH];
+		
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board.length; j++) {
+				Tile tile = new Tile(new Position(i,j), pBoard.getFieldValue(new Position(i,j)));
+				board[i][j] = tile;
+			}
+		}
+		
+		setFieldValue(pPosition, currentPlayer.team);
+	}
+
+	// sets the current player for this board
+	public void setCurrentPlayer(Player pPlayer) {
+		currentPlayer = pPlayer;
+	}
+
+	// sets the value of a tile from a given position on the board
+	public void setFieldValue(Position pPosition, TileValue fv) {
+		Tile tile = new Tile(pPosition, fv);
+		board[pPosition.row][pPosition.column] = tile;
+	}
+
+	// gets the board
+	public Tile[][] getBoard() {
+		return board;
+	}
+
+	// returns the current player
+	public Player getCurrentPlayer() {
+		return currentPlayer;
 	}
 	
 	// returns a tile as a given position on the board
@@ -37,17 +72,6 @@ public class GameBoard {
 		return board[pPosition.row][pPosition.column].value;
 	}
 	
-	// gets the board
-	public Tile[][] getBoard() {
-		return board;
-	}
-
-	// sets the value of a tile from a given position on the board
-	public void setFieldValue(Position pPosition, TileValue fv) {
-		Tile tile = new Tile(pPosition, fv);
-		board[pPosition.row][pPosition.column] = tile;
-	}
-
 	// returns a list of all the tiles on the board
 	public LinkedList<Tile> getTiles() {
 		
@@ -77,14 +101,21 @@ public class GameBoard {
 	}
 	
 	// returns a list of board states that could result from the current players turn
-	public LinkedList<GameBoard> getSuccessorStates(TileValue turn) {
+	public LinkedList<GameBoard> getSuccessorStates() {
 		
 		LinkedList<GameBoard> successors = new LinkedList<GameBoard>();
 		
-		for (Tile tile : getEmptyTiles()) {
-			GameBoard successor = this;
-			successor.setFieldValue(tile.position, turn);
-			successors.add(successor);
+		if (!isTerminal()) 
+		{
+			BoardDisplay display = new BoardDisplay();
+			for (Tile tile : getEmptyTiles()) 
+			{
+				GameBoard successor = new GameBoard(this, tile.position);
+				
+				successor.setCurrentPlayer(Game.getNextPlayer.get(currentPlayer));
+				successors.add(successor);
+				display.drawBoard(successor);
+			}
 		}
 		
 		return successors;
@@ -92,7 +123,6 @@ public class GameBoard {
 	
 	// is the game over due to a completed row or full board?
 	public boolean isTerminal() {
-		
 		return (getEmptyTiles().size() == 0 || checkForLineWin() != TileValue.Undeclared) ;
 	}
 	
@@ -168,5 +198,26 @@ public class GameBoard {
 		}
 		
 		return comparissonValue;
+	}
+	
+	// finds the value of a finished game
+	public EnumMap<Player, Double> getUtilities() 
+	{
+		EnumMap<Player, Double> utilities = new EnumMap<>(Player.class);
+
+		utilities.put(Player.PLAYER1, 0.0);
+		utilities.put(Player.PLAYER2, 0.0);
+
+		TileValue winningTeam = checkForLineWin();
+		if (winningTeam != TileValue.Undeclared) {
+
+			Player winningPlayer = Game.tileValueToPlayer.get(winningTeam);
+
+			utilities.put(winningPlayer, utilities.get(winningPlayer) + 2);
+			utilities.put(Player.PLAYER1, utilities.get(Player.PLAYER1) - 1);
+			utilities.put(Player.PLAYER2, utilities.get(Player.PLAYER2) - 1);
+		}
+
+		return utilities;
 	}
 }
