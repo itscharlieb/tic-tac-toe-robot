@@ -5,7 +5,7 @@ import java.util.LinkedList;
  */
 public class AI implements IPlayer {
 
-	public Position nextMove() {
+	public Position nextMove(GameBoard board) {
 		return new Position(1,1);
 	}
 }
