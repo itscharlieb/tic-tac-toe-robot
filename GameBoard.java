@@ -19,8 +19,8 @@ public class GameBoard {
 
 	//initializes all board fields to Undeclared
 	private void initializeBoard() {
-		for(int i = 0; i<3; i++) {
-			for(int j = 0; j<3; j++) {
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board.length; j++) {
 				Tile tile = new Tile(new Position(i,j), TileValue.Undeclared);
 				board[i][j] = tile;
 			}
@@ -36,6 +36,11 @@ public class GameBoard {
 	public TileValue getFieldValue(Position pPosition) {
 		return board[pPosition.row][pPosition.column].value;
 	}
+	
+	// gets the board
+	public Tile[][] getBoard() {
+		return board;
+	}
 
 	// sets the value of a tile from a given position on the board
 	public void setFieldValue(Position pPosition, TileValue fv) {
@@ -48,8 +53,8 @@ public class GameBoard {
 		
 		LinkedList<Tile> tiles = new LinkedList<Tile>();
 		
-		for(int i = 0; i<BOARD_SIDE_LENGTH; i++) {
-			for(int j = 0; j<BOARD_SIDE_LENGTH; j++) {
+		for(int i = 0; i < board.length; i++) {
+			for(int j = 0; j < board.length; j++) {
 				tiles.add(board[i][j]);
 			}
 		}
@@ -69,6 +74,20 @@ public class GameBoard {
 		}
 		
 		return emptyTiles;
+	}
+	
+	// returns a list of board states that could result from the current players turn
+	public LinkedList<GameBoard> getSuccessorStates(TileValue turn) {
+		
+		LinkedList<GameBoard> successors = new LinkedList<GameBoard>();
+		
+		for (Tile tile : getEmptyTiles()) {
+			GameBoard successor = this;
+			successor.setFieldValue(tile.position, turn);
+			successors.add(successor);
+		}
+		
+		return successors;
 	}
 	
 	// is the game over due to a completed row or full board?
